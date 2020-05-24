@@ -27,8 +27,6 @@ def run(coscript):
     if coscript_exists(coscript):
         coscript_path = coscript_dir + coscript + ".txt"
 
-        print("\n")
-
         file = open(coscript_path, "r")
 
         for (index, line) in enumerate(file.readlines()):
@@ -98,7 +96,7 @@ def parse_function(args):
 
 parser = argparse.ArgumentParser(description="Coscript")
 
-parser.add_argument("function", help="CoScript function you want to run", choices=["create", "run", "update", "delete"], nargs='+', metavar="function", type=str)
+parser.add_argument("function", help="CoScript function you want to run", choices=["create", "run", "update", "delete", "list"], nargs='+', metavar="function", type=str)
 parser.add_argument("name", help="Name of CoScript to run function on", nargs='+', metavar="name", type=str)
 
 if len(sys.argv) <= 1:
