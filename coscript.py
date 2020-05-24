@@ -1,34 +1,40 @@
 import sys
 import argparse
 
-def create():
-    print("create")
+def create(coscript):
+    print("create", coscript)
 
-def run():
-    print("run")
+def run(coscript):
+    print("run", coscript)
 
-def update():
-    print("update")
+def update(coscript):
+    print("update", coscript)
 
-def delete():
-    print("delete")
+def delete(coscript):
+    print("delete", coscript)
+
+command_map = {
+    "create": create,
+    "run": run,
+    "update": update,
+    "delete": delete
+}
+
+def parse_function(args):
+    coscript_function = command_map.get(args.function[0])
+
+    if coscript_function:
+        coscript_function(args.name[0])
+    else:
+        parser.print_help()
 
 parser = argparse.ArgumentParser(description="Coscript")
-subparsers = parser.add_subparsers()
 
-parser_create = subparsers.add_parser("create", help="Create new coscript")
-parser_create.set_defaults(func=create)
-parser_run = subparsers.add_parser("run", help="Run a coscript")
-parser_run.set_defaults(func=run)
-parser_update = subparsers.add_parser("update", help="Update a coscript")
-parser_update.set_defaults(func=update)
-parser_delete = subparsers.add_parser("delete", help="Delete a coscript")
-parser_delete.set_defaults(func=delete)
-
-# parser.add_argument('coscript function', choices=["create", "run", "update", "delete"], metavar='create', type=str, nargs=1, help="COSCRIPT FUNCTION")
+parser.add_argument("function", help="CoScript function you want to run", choices=["create", "run", "update", "delete"], nargs='+', metavar="function", type=str)
+parser.add_argument("name", help="Name of CoScript to run function on", nargs='+', metavar="name", type=str)
 
 if len(sys.argv) <= 1:
     sys.argv.append('--help')
 
 args = parser.parse_args()
-args.func()
+parse_function(args)
