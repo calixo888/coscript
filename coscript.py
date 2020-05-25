@@ -97,7 +97,13 @@ def read(coscript):
 
 def list_coscripts():
     for coscript in os.listdir(coscript_dir):
-        print(coscript.split(".")[0])
+        coscript_name = coscript.split(".")[0]
+        coscript_description = ""
+
+        with open(coscript_dir + coscript) as f:
+            coscript_description = f'"{f.readline().strip()}"'
+
+        print("{: <10} {: <20}".format(*[coscript_name, coscript_description]))
 
 command_map = {
     "create": create,
