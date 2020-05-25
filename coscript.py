@@ -69,11 +69,25 @@ def delete(coscript):
     else:
         print("[-] That CoScript doesn't exist!")
 
+def read(coscript):
+    if coscript_exists(coscript):
+        coscript_path = coscript_dir + coscript + ".txt"
+
+        file = open(coscript_path, "r")
+
+        print(file.read())
+
+        file.close()
+
+    else:
+        print("[-] That CoScript doesn't exist!")
+
 command_map = {
     "create": create,
     "run": run,
     "update": update,
-    "delete": delete
+    "delete": delete,
+    "read": read
 }
 
 def verify_coscript_dir():
@@ -96,7 +110,7 @@ def parse_function(args):
 
 parser = argparse.ArgumentParser(description="Coscript")
 
-parser.add_argument("function", help="CoScript function you want to run", choices=["create", "run", "update", "delete", "list"], nargs='+', metavar="function", type=str)
+parser.add_argument("function", help="CoScript function you want to run", choices=["create", "run", "update", "delete", "list", "read"], nargs='+', metavar="function", type=str)
 parser.add_argument("name", help="Name of CoScript to run function on", nargs='+', metavar="name", type=str)
 
 if len(sys.argv) <= 1:
