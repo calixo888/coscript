@@ -1,0 +1,2 @@
+certifi==2020.4.5.1
+termcolor==1.1.0

@@ -1,3 +1,4 @@
+from termcolor import colored
 import sys
 import os
 import subprocess
@@ -6,7 +7,6 @@ import argparse
 
 # VARIABLES
 coscript_dir = f"{os.getenv('HOME')}/coscripts/"
-
 
 def create(coscript):
     if not coscript_exists(coscript):
@@ -21,7 +21,7 @@ def create(coscript):
             subprocess.call(('xdg-open', coscript_path))
 
     else:
-        print("[-] That CoScript already exists!")
+        print(colored("[-] That CoScript already exists!", "red"))
 
 def run(coscript):
     if coscript_exists(coscript):
@@ -33,8 +33,8 @@ def run(coscript):
             print(f"[+] Running command #{index + 1}: {line}")
 
             if os.system(line) != 0:
-                print(f"[-] Command '{line.strip()}' failed to execute")
-                print("[-] Quitting out of CoScript execution")
+                print(colored(f"[-] Command '{line.strip()}' failed to execute", "red"))
+                print(colored("[-] Quitting out of CoScript execution", "red"))
                 sys.exit(0)
 
             print("\n")
@@ -44,7 +44,7 @@ def run(coscript):
         print("[+] CoScript ran successfully!")
 
     else:
-        print("[-] That CoScript doesn't exist!")
+        print(colored("[-] That CoScript doesn't exist!", "red"))
 
 def update(coscript):
     if coscript_exists(coscript):
@@ -59,15 +59,15 @@ def update(coscript):
             subprocess.Popen(('xdg-open', coscript_path)).wait()
 
     else:
-        print("[-] That CoScript doesn't exist!")
+        print(colored("[-] That CoScript doesn't exist!", "red"))
 
 def delete(coscript):
     if coscript_exists(coscript):
         os.remove(coscript_dir + coscript + ".txt")
-        print(f"[+] Successfully delete CoScript '{coscript}'")
+        print(colored(f"[+] Successfully deleted CoScript '{coscript}'", "green"))
 
     else:
-        print("[-] That CoScript doesn't exist!")
+        print(colored("[-] That CoScript doesn't exist!", "red"))
 
 def read(coscript):
     if coscript_exists(coscript):
@@ -80,7 +80,7 @@ def read(coscript):
         file.close()
 
     else:
-        print("[-] That CoScript doesn't exist!")
+        print(colored("[-] That CoScript doesn't exist!", "red"))
 
 command_map = {
     "create": create,
