@@ -82,12 +82,17 @@ def read(coscript):
     else:
         print(colored("[-] That CoScript doesn't exist!", "red"))
 
+def list_coscripts():
+    for coscript in os.listdir(coscript_dir):
+        print(coscript.split(".")[0])
+
 command_map = {
     "create": create,
     "run": run,
     "update": update,
     "delete": delete,
-    "read": read
+    "read": read,
+    "list": list_coscripts
 }
 
 def verify_coscript_dir():
@@ -97,21 +102,36 @@ def coscript_exists(coscript_name):
     return os.path.exists(coscript_dir + coscript_name + ".txt")
 
 def parse_function(args):
-    coscript_function = command_map.get(args.function[0])
-
-    coscript_dir_exists = verify_coscript_dir()
-    if not coscript_dir_exists:
-        os.makedirs(coscript_dir)
-
-    if coscript_function:
-        coscript_function(args.name[0])
+    # IF IT'S 'LIST'
+    if args.function[0] == "list":
+        list_coscripts()
     else:
-        parser.print_help()
+        coscript_function = command_map.get(args.function[0])
+
+        coscript_dir_exists = verify_coscript_dir()
+        if not coscript_dir_exists:
+            os.makedirs(coscript_dir)
+
+        if coscript_function:
+            coscript_function(args.name[0])
+        else:
+            parser.print_help()
 
 parser = argparse.ArgumentParser(description="Coscript")
 
-parser.add_argument("function", help="CoScript function you want to run", choices=["create", "run", "update", "delete", "list", "read"], nargs='+', metavar="function", type=str)
-parser.add_argument("name", help="Name of CoScript to run function on", nargs='+', metavar="name", type=str)
+parser.add_argument("function",
+                    help="CoScript function you want to run",
+                    choices=["create", "run", "update", "delete", "list", "read"],
+                    nargs='+',
+                    metavar="function",
+                    type=str
+                )
+parser.add_argument("name",
+                    help="Name of CoScript to run function on",
+                    nargs='+' if ("list" not in sys.argv) else '?',
+                    metavar="name",
+                    type=str
+                )
 
 if len(sys.argv) <= 1:
     sys.argv.append('--help')
