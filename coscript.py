@@ -144,7 +144,7 @@ def parse_function(args):
 parser = argparse.ArgumentParser(description="Coscript")
 
 parser.add_argument("function",
-                    help="CoScript function you want to run",
+                    help='CoScript function you want to run ["create", "run", "update", "delete", "list", "read"]',
                     choices=["create", "run", "update", "delete", "list", "read"],
                     nargs='+',
                     metavar="function",
@@ -157,7 +157,7 @@ parser.add_argument("name",
                     type=str
                 )
 parser.add_argument("description",
-                    help="Description of CoScript",
+                    help="Description of CoScript (Only in CREATE function)",
                     nargs='+' if ("create" in sys.argv) else '?',
                     metavar="description",
                     type=str
