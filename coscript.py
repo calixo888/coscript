@@ -7,11 +7,17 @@ import argparse
 
 # VARIABLES
 coscript_dir = f"{os.getenv('HOME')}/coscripts/"
+separator = "-----------------------------------------"
 
-def create(coscript):
+def create(coscript, description):
+    print(description)
+
     if not coscript_exists(coscript):
         coscript_path = coscript_dir + coscript + ".txt"
-        open(coscript_path, "a").close()
+
+        file = open(coscript_path, "w")
+        file.write(f"{description}\n{separator}")
+        file.close()
 
         if platform.system() == 'Darwin':
             subprocess.call(('open', coscript_path))
@@ -26,18 +32,25 @@ def create(coscript):
 def run(coscript):
     if coscript_exists(coscript):
         coscript_path = coscript_dir + coscript + ".txt"
+        command_counter = 1
 
         file = open(coscript_path, "r")
 
-        for (index, line) in enumerate(file.readlines()):
-            print(f"[+] Running command #{index + 1}: {line}")
+        print("\n")
 
-            if os.system(line) != 0:
-                print(colored(f"[-] Command '{line.strip()}' failed to execute", "red"))
-                print(colored("[-] Quitting out of CoScript execution", "red"))
-                sys.exit(0)
+        for line in file.readlines()[2:]:
+            line = line.strip()
+            if line:
+                print(f"[+] Running command #{command_counter}: {line}")
 
-            print("\n")
+                if os.system(line) != 0:
+                    print(colored(f"[-] Command '{line}' failed to execute", "red"))
+                    print(colored("[-] Quitting out of CoScript execution", "red"))
+                    sys.exit(0)
+
+                print("\n")
+
+                command_counter += 1
 
         file.close()
 
@@ -102,9 +115,14 @@ def coscript_exists(coscript_name):
     return os.path.exists(coscript_dir + coscript_name + ".txt")
 
 def parse_function(args):
-    # IF IT'S 'LIST'
+    # IF IT'S 'LIST' -> RUN LIST
     if args.function[0] == "list":
         list_coscripts()
+
+    # IF IT'S 'CREATE' -> CATCH DESCRIPTION
+    elif args.function[0] == "create":
+        create(args.name[0], args.description[0])
+
     else:
         coscript_function = command_map.get(args.function[0])
 
@@ -130,6 +148,12 @@ parser.add_argument("name",
                     help="Name of CoScript to run function on",
                     nargs='+' if ("list" not in sys.argv) else '?',
                     metavar="name",
+                    type=str
+                )
+parser.add_argument("description",
+                    help="Description of CoScript",
+                    nargs='+' if ("create" in sys.argv) else '?',
+                    metavar="description",
                     type=str
                 )
 
